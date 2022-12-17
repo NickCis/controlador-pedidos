@@ -5,13 +5,13 @@ import InputLabel from '@mui/material/InputLabel';
 import Input from '@mui/material/Input';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import DoneIcon from '@mui/icons-material/Done';
-import AddIcon from '@mui/icons-material/Add';
+import ClearIcon from '@mui/icons-material/Clear';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 import type { Product } from 'types/Product';
 import ProductList from './ProductList';
 
-function AddField({ onClick }: { onClick: (v: number) => void }) {
+function RemoveField({ onClick }: { onClick: (v: number) => void }) {
   const [value, setValue] = useState(1);
   return (
     <FormControl
@@ -27,7 +27,7 @@ function AddField({ onClick }: { onClick: (v: number) => void }) {
         endAdornment={
           <InputAdornment position="start" sx={{ margin: 0 }}>
             <IconButton onClick={() => onClick(value)}>
-              <AddIcon />
+              <RemoveIcon />
             </IconButton>
           </InputAdornment>
         }
@@ -36,25 +36,25 @@ function AddField({ onClick }: { onClick: (v: number) => void }) {
   );
 }
 
-export interface PendingProductListProps {
+export interface FullfilledProductListProps {
   products: Product[];
-  onFullfill: (product: Product, amount?: number) => void;
+  onClear: (product: Product, amount?: number) => void;
 }
 
-function PendingProductList({ products, onFullfill }: PendingProductListProps) {
+function FullfilledProductList({ products, onClear }: FullfilledProductListProps) {
   return (
     <ProductList
-      title="Productos Pendientes"
+      title="Productos controlados"
       products={products}
       renderAction={(product) => (
         <>
-          <AddField onClick={(v) => onFullfill(product, v)} />
+          <RemoveField onClick={(v) => onClear(product, v)} />
           <IconButton
             edge="end"
             color="primary"
-            onClick={() => onFullfill(product)}
+            onClick={() => onClear(product)}
           >
-            <DoneIcon />
+            <ClearIcon />
           </IconButton>
         </>
       )}
@@ -62,4 +62,4 @@ function PendingProductList({ products, onFullfill }: PendingProductListProps) {
   );
 }
 
-export default PendingProductList;
+export default FullfilledProductList;

@@ -1,9 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { NextApiRequest, NextApiResponse } from 'next';
+import path from 'path';
+import { promises as fs } from 'fs';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import fetch from 'node-fetch';
 import { parse } from 'node-html-parser';
 // import fs from 'fs';
-import type Product from 'types/Product';
+import type { Product } from 'types/Product';
 
 const Base = 'http://apps01.coto.com.ar/TicketMobile/Ticket';
 
@@ -29,6 +31,29 @@ interface Data {
   };
 }
 
+let cache: Record<string, string> | null = null;
+// https://vercel.com/guides/loading-static-file-nextjs-api-route
+async function getEanCodes(): Promise<Record<string, string>> {
+  if (!cache) {
+    const p = path.join(process.cwd(), 'json', 'plu.json');
+    cache = JSON.parse(await fs.readFile(p, 'utf8'));
+  }
+
+  return cache || {};
+}
+
+function fixImageUrl(url?: string): string {
+  if (url) {
+    const match = url.match(
+      /http:\/\/static.cotodigital.com.ar\/sitios\/fotos\/thumb\/([^/]*?)\/([^/]*?)\.jpg/,
+    );
+
+    if (match) return `/api/img/${match[1]}-${match[2]}`;
+  }
+
+  return '';
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -37,7 +62,6 @@ export default async function handler(
   const url = `${Base}/${id}`;
   const response = await fetch(url);
   const text = await response.text();
-  // const text = fs.readFileSync('/home/nickcis/repos/cotodigital/ticket.html').toString();
   const root = parse(text);
   const products = root.querySelectorAll('.product-li');
 
@@ -63,6 +87,7 @@ export default async function handler(
     };
   }
 
+  const plu2ean = await getEanCodes();
   for (const product of products) {
     const img = product.querySelector('.producto-img');
     const name = product.querySelector('.info-producto-h2');
@@ -82,13 +107,17 @@ export default async function handler(
     }
 
     const vat = product.querySelector('.info-iva');
+    const plu = codes?.querySelector('.plu')?.text || 'unknown';
 
     data.products.push({
-      img: img?.attributes?.style?.match(/url\(["']?([^)]*)["']?\)/)?.[1] || '',
+      img: fixImageUrl(
+        img?.attributes?.style?.match(/url\(["']?([^)]*)["']?\)/)?.[1],
+      ),
       name: name?.text?.trim() || '',
       code: {
-        plu: codes?.querySelector('.plu')?.text || 'unknown',
+        plu,
         lean: codes?.querySelector('.lean')?.text || 'unknown',
+        ean: plu2ean[`${parseInt(plu, 10)}`] || 'unknown',
       },
       amount: toNumber(amount?.[1]),
       price: {

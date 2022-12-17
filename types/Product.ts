@@ -1,8 +1,9 @@
-export default interface Product {
+export interface Product {
   amount: number;
   code: {
     plu: string;
     lean: string;
+    ean: string;
   };
   img: string;
   name: string;
@@ -15,4 +16,14 @@ export default interface Product {
     }[];
   };
   vat: string;
+}
+
+export interface ApiProduct {
+  code: {
+    plu: string;
+    ean: string;
+  };
+  img: string;
+  name: string;
+  price: string;
 }

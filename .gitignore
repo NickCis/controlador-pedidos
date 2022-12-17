@@ -3,3 +3,6 @@ node_modules
 .next
 .*.sw*
 .vercel
+venv
+__pycache__
+cotodigital.ljson

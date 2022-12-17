@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type Product from 'types/Product';
+import type { Product } from 'types/Product';
 
 export interface FetchCart {
   loading?: boolean;
