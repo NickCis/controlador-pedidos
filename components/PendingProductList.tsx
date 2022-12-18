@@ -11,19 +11,29 @@ import AddIcon from '@mui/icons-material/Add';
 import type { Product } from 'types/Product';
 import ProductList from './ProductList';
 
-function AddField({ onClick }: { onClick: (v: number) => void }) {
-  const [value, setValue] = useState(1);
+function AddField({
+  onClick,
+  product,
+}: {
+  onClick: (v: number) => void;
+  product: Product;
+}) {
+  const [value, setValue] = useState(Math.min(1, product.amount));
+  const _value = `${value}`;
   return (
     <FormControl
       margin="dense"
-      sx={{ width: `${7 + `${value}`.length}ch` }}
+      sx={{ width: `${5 + _value.length}ch` }}
       variant="standard"
     >
       <Input
+        sx={{
+          fontFamily: 'monospace',
+        }}
         margin="dense"
         type="number"
-        value={+value}
-        onChange={(e) => setValue(+e.target.value)}
+        value={_value}
+        onChange={(e) => setValue(Math.min(+e.target.value, product.amount))}
         endAdornment={
           <InputAdornment position="start" sx={{ margin: 0 }}>
             <IconButton onClick={() => onClick(value)}>
@@ -48,7 +58,7 @@ function PendingProductList({ products, onFullfill }: PendingProductListProps) {
       products={products}
       renderAction={(product) => (
         <>
-          <AddField onClick={(v) => onFullfill(product, v)} />
+          <AddField onClick={(v) => onFullfill(product, v)} product={product} />
           <IconButton
             edge="end"
             color="primary"

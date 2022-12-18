@@ -20,7 +20,7 @@ function useCart(data?: FetchCart['data']): [Cart, CartSetter] {
   useEffect(() => {
     if (!data) return;
     setCart({
-      pending: data.products,
+      pending: data.products || [],
       fullfilled: [],
     });
   }, [data]);
@@ -38,7 +38,8 @@ function useCart(data?: FetchCart['data']): [Cart, CartSetter] {
               continue;
             }
 
-            const newAmount = p.amount - (amount || p.amount);
+            const cappedAmount = Math.min(p.amount, amount || p.amount);
+            const newAmount = p.amount - cappedAmount;
             if (newAmount > 0)
               pending.push({
                 ...p,
@@ -47,9 +48,12 @@ function useCart(data?: FetchCart['data']): [Cart, CartSetter] {
 
             fullfilled.push({
               ...p,
-              amount: amount || p.amount,
+              amount: cappedAmount,
             });
           }
+
+          if (fullfilled.length === 0)
+            return cart;
 
           for (const f of cart.fullfilled) {
             if (f.code.plu !== code) {
@@ -57,7 +61,7 @@ function useCart(data?: FetchCart['data']): [Cart, CartSetter] {
               continue;
             }
 
-            if (code === fullfilled[0]?.code.plu) {
+            if (code === fullfilled[0].code.plu) {
               fullfilled[0].amount += f.amount;
             }
           }

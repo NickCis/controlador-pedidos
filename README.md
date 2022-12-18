@@ -6,7 +6,7 @@
 
 ## TODO
 
-- [ ] Agregar producto mediante scannear no debería dejar agregar productos más que el existente
+- [x] Agregar producto mediante scannear no debería dejar agregar productos más que el existente
 - [ ] Chequear que no se re marque un producto que ya fue marcado
 - [ ] Header: agregar link a github con explicación de como usar
 - [ ] Home loading state

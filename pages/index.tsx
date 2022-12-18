@@ -37,7 +37,6 @@ function ScanFab({
         }}
         onClose={() => {
           setOpen(false);
-          setEan('7793360984907');
         }}
       />
       <ProductBottomSheet

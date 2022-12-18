@@ -161,13 +161,19 @@ function ProductFound({
           </Box>
           <TextField
             label="Cantidad"
-            value={amount}
-            onChange={(e) => setAmount(+e.target.value)}
+            value={`${amount}`}
+            onChange={(e) =>
+              setAmount(Math.min(+e.target.value, state.product.amount))
+            }
             variant="outlined"
             type="number"
           />
           <Box sx={{ mx: 1 }}>
-            <IconButton onClick={() => setAmount((a) => a + 1)}>
+            <IconButton
+              onClick={() =>
+                setAmount((a) => Math.min(a + 1, state.product.amount))
+              }
+            >
               <AddIcon />
             </IconButton>
           </Box>
