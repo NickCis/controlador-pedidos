@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
+import CircularProgress from '@mui/material/CircularProgress';
 import Frame from 'components/Frame';
 import TextFieldScan from 'components/TextFieldScan';
 import PendingProductList from 'components/PendingProductList';
@@ -56,7 +57,7 @@ function ScanFab({
 
 function Content({ cart, setCart }: { cart: Cart; setCart: CartSetter }) {
   return (
-    <>
+    <Box sx={{ flex: 1 }}>
       <PendingProductList
         products={cart.pending}
         onFullfill={(product, amount) => {
@@ -75,7 +76,7 @@ function Content({ cart, setCart }: { cart: Cart; setCart: CartSetter }) {
           setCart('pending', product.code.plu, amount);
         }}
       />
-    </>
+    </Box>
   );
 }
 
@@ -83,16 +84,36 @@ export default function Home() {
   const [ticket, setTicket] = useState('');
   const { data, loading } = useFetchCart(ticket);
   const [cart, setCart] = useCart(data);
+  const isLoading = loading; //  || !(data && cart.pending);
+  const hasData = data && cart.pending;
 
   return (
-    <Frame p={1} pt={2} pb={9}>
+    <Frame
+      p={1}
+      pt={2}
+      pb={9}
+      sx={{ display: 'flex', flexDirection: 'column' }}
+    >
       <TextFieldScan
         value={ticket}
         onChange={(t) => setTicket(t)}
         label="Ticket de compra"
-        disabled={!!loading}
+        disabled={isLoading}
       />
-      {data && cart.pending && <Content cart={cart} setCart={setCart} />}
+      {isLoading ? (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      ) : hasData ? (
+        <Content cart={cart} setCart={setCart} />
+      ) : null}
     </Frame>
   );
 }

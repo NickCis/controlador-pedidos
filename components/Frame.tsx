@@ -15,9 +15,7 @@ function Frame({ sx, children, ...props }: BoxProps) {
       </Head>
       <AppBar position="absolute">
         <Toolbar>
-          <ShoppingCartIcon
-            sx={{ mr: 1 }}
-          />
+          <ShoppingCartIcon sx={{ mr: 1 }} />
           <Typography component="h1" variant="h6" color="inherit" noWrap>
             Coto Digital
           </Typography>

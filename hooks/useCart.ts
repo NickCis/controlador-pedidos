@@ -52,8 +52,7 @@ function useCart(data?: FetchCart['data']): [Cart, CartSetter] {
             });
           }
 
-          if (fullfilled.length === 0)
-            return cart;
+          if (fullfilled.length === 0) return cart;
 
           for (const f of cart.fullfilled) {
             if (f.code.plu !== code) {

@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write '{pages,src}/**/*.{js,ts,tsx}'",
+    "format": "prettier --write '{pages,src,components,hooks,icons,types}/**/*.{js,ts,tsx}'",
     "vercel": "vercel"
   },
   "license": "GPL-3.0",

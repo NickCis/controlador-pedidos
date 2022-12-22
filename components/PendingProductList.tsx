@@ -4,6 +4,8 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Input from '@mui/material/Input';
 import InputAdornment from '@mui/material/InputAdornment';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 import DoneIcon from '@mui/icons-material/Done';
 import AddIcon from '@mui/icons-material/Add';
@@ -56,6 +58,22 @@ function PendingProductList({ products, onFullfill }: PendingProductListProps) {
     <ProductList
       title="Productos Pendientes"
       products={products}
+      emptyState={
+        <Box sx={{ textAlign: 'center', p: 2 }}>
+          <Box>
+            <DoneIcon
+              sx={{
+                width: '32px',
+                height: '32px',
+                color: (theme) => theme.palette.success.main,
+              }}
+            />
+          </Box>
+          <Typography variant="body2">
+            ¡Todos los productos fueron controlados!
+          </Typography>
+        </Box>
+      }
       renderAction={(product) => (
         <>
           <AddField onClick={(v) => onFullfill(product, v)} product={product} />

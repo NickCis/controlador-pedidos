@@ -4,9 +4,12 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Input from '@mui/material/Input';
 import InputAdornment from '@mui/material/InputAdornment';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 import ClearIcon from '@mui/icons-material/Clear';
 import RemoveIcon from '@mui/icons-material/Remove';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 import type { Product } from 'types/Product';
 import ProductList from './ProductList';
@@ -59,6 +62,18 @@ function FullfilledProductList({
     <ProductList
       title="Productos controlados"
       products={products}
+      emptyState={
+        <Box sx={{ textAlign: 'center', p: 2 }}>
+          <Box>
+            <AddShoppingCartIcon
+              sx={{ width: '32px', height: '32px', color: 'grey' }}
+            />
+          </Box>
+          <Typography variant="body2">
+            No hay ningun producto validado
+          </Typography>
+        </Box>
+      }
       renderAction={(product) => (
         <>
           <RemoveField onClick={(v) => onClear(product, v)} product={product} />

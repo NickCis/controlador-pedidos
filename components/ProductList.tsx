@@ -12,6 +12,7 @@ export interface ProductListProps {
   title?: ReactNode;
   products: Product[];
   renderAction?: (p: Product) => ReactNode;
+  emptyState?: ReactNode;
 }
 
 function ProductItem({
@@ -36,16 +37,23 @@ function ProductItem({
   );
 }
 
-function ProductList({ title, products, renderAction }: ProductListProps) {
+function ProductList({
+  title,
+  products,
+  renderAction,
+  emptyState,
+}: ProductListProps) {
   return (
     <List subheader={title && <ListSubheader>{title}</ListSubheader>} dense>
-      {products.map((p) => (
-        <ProductItem
-          key={`${p.code.plu}-${p.code.ean}`}
-          product={p}
-          renderAction={renderAction}
-        />
-      ))}
+      {products.length > 0
+        ? products.map((p) => (
+            <ProductItem
+              key={`${p.code.plu}-${p.code.ean}`}
+              product={p}
+              renderAction={renderAction}
+            />
+          ))
+        : emptyState || null}
     </List>
   );
 }
