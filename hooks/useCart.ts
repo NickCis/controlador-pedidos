@@ -3,6 +3,7 @@ import type { FetchCart } from './useFetchCart';
 import type { Product } from 'types/Product';
 
 export interface Cart {
+  id: string;
   pending: Product[];
   fullfilled: Product[];
 }
@@ -13,13 +14,33 @@ export type CartSetter = (
   code: string,
   amount?: number,
 ) => void;
+export type CartClearer = () => void;
 
-function useCart(data?: FetchCart['data']): [Cart, CartSetter] {
-  const [cart, setCart] = useState<Cart>({ pending: [], fullfilled: [] });
+const Key = '__cart__';
+
+const DefaultCart: Cart = { pending: [], fullfilled: [] };
+function useCart(
+  data?: FetchCart['data'],
+): [Cart | null, CartSetter, CartClearer] {
+  const [cart, setCart] = useState<Cart | null>();
 
   useEffect(() => {
     if (!data) return;
+    const stored = localStorage.getItem(Key);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored) as Cart;
+        if (data.id === parsed.id) {
+          setCart(parsed);
+          return;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
     setCart({
+      id: data.id,
       pending: data.products || [],
       fullfilled: [],
     });
@@ -65,10 +86,14 @@ function useCart(data?: FetchCart['data']): [Cart, CartSetter] {
             }
           }
 
-          return {
+          const newCart: Cart = {
+            id: cart.id,
             pending,
             fullfilled,
           };
+
+          localStorage.setItem(Key, JSON.stringify(newCart));
+          return newCart;
         });
       } else if (action === 'fullfilled') {
         setCart((cart) => {
@@ -115,14 +140,20 @@ function useCart(data?: FetchCart['data']): [Cart, CartSetter] {
               amount: fixedAmount,
             });
 
-          return {
+          const newCart: Cart = {
+            id: cart.id,
             pending,
             fullfilled,
           };
+          localStorage.setItem(Key, JSON.stringify(newCart));
+          return newCart;
         });
       } else {
         throw new Error(`Unknown action: '${action}'`);
       }
+    },
+    () => {
+      setCart(null);
     },
   ];
 }
