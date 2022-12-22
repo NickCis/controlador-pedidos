@@ -10,7 +10,7 @@ function useSesionState<S>(
   useEffect(() => {
     try {
       const stored = localStorage.getItem(key);
-      if (stored) setState(JSON.parse(stored) as T);
+      if (stored) setState(JSON.parse(stored) as S);
     } catch (e) {}
   }, [key]);
 
@@ -18,7 +18,10 @@ function useSesionState<S>(
     state,
     (value: SetStateAction<S>) => {
       setState((s) => {
-        const v = typeof value === 'function' ? value(s) : value;
+        const v =
+          typeof value === 'function'
+            ? (value as unknown as Function)(s)
+            : value;
         localStorage.setItem(key, JSON.stringify(v));
         return v;
       });

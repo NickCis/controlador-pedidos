@@ -11,11 +11,6 @@ export interface FetchCart {
 
 const Key = '__fetch_cart__';
 
-interface FetchCartStorage {
-  data: FetchCart['data'];
-  id: string;
-}
-
 function useFetchCart(ticket: string): FetchCart {
   const [data, setData] = useState<FetchCart>({});
   useEffect(() => {
@@ -29,9 +24,9 @@ function useFetchCart(ticket: string): FetchCart {
     const stored = localStorage.getItem(Key);
     if (stored) {
       try {
-        const parsed = JSON.parse(stored) as FetchCartStorage;
-        if (id === parsed.id) {
-          setData({ data: { ...parsed.data, id } });
+        const parsed = JSON.parse(stored) as FetchCart['data'];
+        if (id === parsed?.id) {
+          setData({ data: parsed });
           return;
         }
       } catch (e) {}
@@ -42,19 +37,14 @@ function useFetchCart(ticket: string): FetchCart {
     (async () => {
       const req = await fetch(`/api/ticket/${id}`);
       const data = await req.json();
+      const newData = {
+        ...data,
+        id,
+      };
       setData({
-        data: {
-          ...data,
-          id,
-        },
+        data: newData,
       });
-      localStorage.setItem(
-        Key,
-        JSON.stringify({
-          id,
-          data,
-        }),
-      );
+      localStorage.setItem(Key, JSON.stringify(newData));
     })();
 
     return () => {

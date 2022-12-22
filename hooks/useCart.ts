@@ -18,11 +18,10 @@ export type CartClearer = () => void;
 
 const Key = '__cart__';
 
-const DefaultCart: Cart = { pending: [], fullfilled: [] };
 function useCart(
   data?: FetchCart['data'],
 ): [Cart | null, CartSetter, CartClearer] {
-  const [cart, setCart] = useState<Cart | null>();
+  const [cart, setCart] = useState<Cart | null>(null);
 
   useEffect(() => {
     if (!data) return;
@@ -51,6 +50,7 @@ function useCart(
     (action: SetterAction, code: string, amount?: number) => {
       if (action === 'pending') {
         setCart((cart) => {
+          if (!cart) return cart;
           const pending: Product[] = [];
           const fullfilled: Product[] = [];
           for (const p of cart.pending) {
@@ -97,6 +97,7 @@ function useCart(
         });
       } else if (action === 'fullfilled') {
         setCart((cart) => {
+          if (!cart) return cart;
           const fullfilled: Product[] = [];
           let item: Product | undefined;
 

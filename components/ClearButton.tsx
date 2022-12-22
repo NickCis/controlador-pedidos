@@ -25,7 +25,7 @@ function ClearButton({ onClick, ...props }: IconButtonProps) {
           <Button
             onClick={(e) => {
               setOpen(false);
-              onClick(e);
+              onClick && onClick(e);
             }}
             autoFocus
           >
