@@ -24,6 +24,10 @@ function ProductItem({
 }) {
   return (
     <ListItem
+      sx={{
+        contentVisibility: 'auto',
+        containIntrinsicSize: '0 60px',
+      }}
       secondaryAction={renderAction ? renderAction(product) : undefined}
     >
       <ListItemAvatar>
