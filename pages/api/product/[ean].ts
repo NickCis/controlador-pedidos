@@ -26,8 +26,8 @@ interface Data {
 
 async function getCotoDigitalLink(ean: string): Promise<string | undefined> {
   const url = `https://www.google.com/search?q=${encodeURIComponent(
-    `site:www.cotodigital3.com.ar "EAN: ${ean}`,
-  )}"`;
+    `site:cotodigital3.com.ar "${ean}"`,
+  )}`;
   const response = await fetch(url, {
     headers: {
       'User-Agent':
@@ -65,7 +65,7 @@ export default async function handler(
 ) {
   const { ean } = req.query;
   if (!ean || Array.isArray(ean)) {
-    res.status(404);
+    res.status(400);
     res.json({});
     return;
   }
