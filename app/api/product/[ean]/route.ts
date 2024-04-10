@@ -1,9 +1,10 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next';
+// https://nextjs.org/docs/app/building-your-application/routing/route-handlers
+import { type NextRequest } from 'next/server';
 import fetch from 'node-fetch';
 import { parse } from 'node-html-parser';
-// import fs from 'fs';
 import type { Product } from 'types/Product';
+
+// fix-vim-highlight = {}
 
 const Base = 'http://apps01.coto.com.ar/TicketMobile/Ticket';
 
@@ -59,44 +60,42 @@ function fixImageUrl(url?: string): string {
   return '';
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { ean: string } },
 ) {
-  const { ean } = req.query;
-  if (!ean || Array.isArray(ean)) {
-    res.status(400);
-    res.json({});
-    return;
-  }
+  const { ean } = params;
+  if (!ean || Array.isArray(ean)) return Response.json({}, { status: 404 });
 
   const url = await getCotoDigitalLink(ean);
 
-  if (!url) {
-    res.status(404);
-    res.json({});
-    return;
-  }
+  if (!url) return Response.json({}, { status: 404 });
 
   const response = await fetch(url);
   const text = await response.text();
   const root = parse(text);
   const codes = root.querySelectorAll('.span_codigoplu');
 
-  res.setHeader('Cache-Control', 'public, max-age=86400');
-
-  res.status(200).json({
-    url,
-    name: safeTrim(root.querySelector('h1.product_page')?.innerText),
-    code: {
-      plu: safeTrim(codes?.[0]?.innerText),
-      ean: safeTrim(codes?.[1]?.innerText),
+  return Response.json(
+    {
+      url,
+      name: safeTrim(root.querySelector('h1.product_page')?.innerText),
+      code: {
+        plu: safeTrim(codes?.[0]?.innerText),
+        ean: safeTrim(codes?.[1]?.innerText),
+      },
+      img: fixImageUrl(root.querySelector('img.zoomImage1')?.attributes?.src),
+      price: safeTrim(root.querySelector('.atg_store_newPrice')?.innerText),
+      by_kg:
+        safeTrim(
+          root.querySelector('section.unit_products')?.innerText,
+        ).toLowerCase() == 'en kg:',
     },
-    img: fixImageUrl(root.querySelector('img.zoomImage1')?.attributes?.src),
-    price: safeTrim(root.querySelector('.atg_store_newPrice')?.innerText),
-    by_kg:
-      safeTrim(
-        root.querySelector('section.unit_products')?.innerText,
-      ).toLowerCase() == 'en kg:',
-  });
+    {
+      status: 200,
+      headers: {
+        'Cache-Control': 'public, immutable, max-age=86400',
+      },
+    },
+  );
 }
