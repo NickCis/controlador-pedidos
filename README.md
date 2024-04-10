@@ -1,5 +1,7 @@
 # Controlador de pedidos de Coto Digital
 
+(No afiliado de ninguna forma con Coto)
+
 ## Como usar
 
 ## FAQs

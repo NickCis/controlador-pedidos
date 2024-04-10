@@ -6,6 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import ClearIcon from '@mui/icons-material/Clear';
 
 function ClearButton({ onClick, ...props }: IconButtonProps) {
@@ -33,14 +34,16 @@ function ClearButton({ onClick, ...props }: IconButtonProps) {
           </Button>
         </DialogActions>
       </Dialog>
-      <IconButton
-        color="inherit"
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        <ClearIcon />
-      </IconButton>
+      <Tooltip title="Borrar">
+        <IconButton
+          color="inherit"
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          <ClearIcon />
+        </IconButton>
+      </Tooltip>
     </>
   );
 }

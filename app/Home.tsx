@@ -1,24 +1,29 @@
+'use client';
+
 import { useRef, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
+import Tooltip from '@mui/material/Tooltip';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
-import Frame from 'components/Frame';
-import TextFieldScan from 'components/TextFieldScan';
-import PendingProductList from 'components/PendingProductList';
-import FullfilledProductList from 'components/FullfilledProductList';
-import useFetchCart from 'hooks/useFetchCart';
-import useSesionState from 'hooks/useSesionState';
-import useCart, { Cart, CartSetter } from 'hooks/useCart';
-import type { Product } from 'types/Product';
-import BarCodeScannerIcon from 'icons/BarCodeScanner';
-import ScannerDialog from 'components/ScannerDialog';
-import { Html5QrcodeSupportedFormats } from 'components/Scanner';
+import BugReportIcon from '@mui/icons-material/BugReport';
+
+import Frame from '@/components/Frame';
+import TextFieldScan from '@/components/TextFieldScan';
+import PendingProductList from '@/components/PendingProductList';
+import FullfilledProductList from '@/components/FullfilledProductList';
+import useFetchCart from '@/hooks/useFetchCart';
+import useSesionState from '@/hooks/useSesionState';
+import useCart, { Cart, CartSetter } from '@/hooks/useCart';
+import type { Product } from '@/types/Product';
+import BarCodeScannerIcon from '@/icons/BarCodeScanner';
+import ScannerDialog from '@/components/ScannerDialog';
+import { Html5QrcodeSupportedFormats } from '@/components/Scanner';
 import ProductBottomSheet, {
   ProductBottomSheetProps,
-} from 'components/ProductBottomSheet';
-import ClearButton from 'components/ClearButton';
+} from '@/components/ProductBottomSheet';
+import ClearButton from '@/components/ClearButton';
 
 function ScanFab({
   cart,
@@ -99,14 +104,26 @@ export default function Home() {
       sx={{ display: 'flex', flexDirection: 'column' }}
       header={
         <>
-          <IconButton
-            color="inherit"
-            component="a"
-            target="_blank"
-            href="https://github.com/NickCis/cotodigital#como-usar"
-          >
-            <QuestionMarkIcon />
-          </IconButton>
+          <Tooltip title="Reportar un error">
+            <IconButton
+              color="inherit"
+              component="a"
+              target="_blank"
+              href="https://github.com/NickCis/cotodigital/issues/new?assignees=NickCis&labels=bug&projects=&template=reporte-de-error.md&title="
+            >
+              <BugReportIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="¿Como usar?">
+            <IconButton
+              color="inherit"
+              component="a"
+              target="_blank"
+              href="https://github.com/NickCis/cotodigital#como-usar"
+            >
+              <QuestionMarkIcon />
+            </IconButton>
+          </Tooltip>
           {hasData ? (
             <ClearButton
               onClick={() => {
