@@ -1,11 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import path from 'path';
-import { promises as fs } from 'fs';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { promises as fs } from 'node:fs';
+import { type NextRequest } from 'next/server';
 import fetch from 'node-fetch';
 import { parse } from 'node-html-parser';
-// import fs from 'fs';
-import type { Product } from 'types/Product';
+
+import type { Product } from '@/types/Product';
+
+// fix-vim-highlight = {}
 
 const Base = 'http://apps01.coto.com.ar/TicketMobile/Ticket';
 
@@ -54,11 +56,11 @@ function fixImageUrl(url?: string): string {
   return '';
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } },
 ) {
-  const { id } = req.query;
+  const { id } = params;
   const url = `${Base}/${id}`;
   const response = await fetch(url);
   const text = await response.text();
@@ -151,5 +153,5 @@ export default async function handler(
     }
   }
 
-  res.status(200).json(data);
+  return Response.json(data, { status: 200 });
 }

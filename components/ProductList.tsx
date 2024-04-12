@@ -13,6 +13,7 @@ export interface ProductListProps {
   products: Product[];
   renderAction?: (p: Product) => ReactNode;
   emptyState?: ReactNode;
+  id?: string;
 }
 
 function ProductItem({
@@ -46,9 +47,14 @@ function ProductList({
   products,
   renderAction,
   emptyState,
+  id,
 }: ProductListProps) {
   return (
-    <List subheader={title && <ListSubheader>{title}</ListSubheader>} dense>
+    <List
+      id={id}
+      subheader={title && <ListSubheader>{title}</ListSubheader>}
+      dense
+    >
       {products.length > 0
         ? products.map((p) => (
             <ProductItem

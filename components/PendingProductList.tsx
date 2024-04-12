@@ -38,7 +38,10 @@ function AddField({
         onChange={(e) => setValue(Math.min(+e.target.value, product.amount))}
         endAdornment={
           <InputAdornment position="start" sx={{ margin: 0 }}>
-            <IconButton onClick={() => onClick(value)}>
+            <IconButton
+              onClick={() => onClick(value)}
+              className="pending-product-list-add-button"
+            >
               <AddIcon />
             </IconButton>
           </InputAdornment>
@@ -56,6 +59,7 @@ export interface PendingProductListProps {
 function PendingProductList({ products, onFullfill }: PendingProductListProps) {
   return (
     <ProductList
+      id="pending-product-list"
       title="Productos Pendientes"
       products={products}
       emptyState={
@@ -80,6 +84,7 @@ function PendingProductList({ products, onFullfill }: PendingProductListProps) {
           <IconButton
             edge="end"
             color="primary"
+            className="pending-product-list-fullfill-button"
             onClick={() => onFullfill(product)}
           >
             <DoneIcon />
