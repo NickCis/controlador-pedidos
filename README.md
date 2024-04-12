@@ -12,7 +12,7 @@ https://github.com/NickCis/cotodigital/assets/174561/9d5b55e2-67fe-4905-94d6-dba
 
 1. Entra en [https://cotodigital.vercel.app/](https://cotodigital.vercel.app/)
 2. Toca el botón "ESCANEAR" que esta en la mitad de la pantalla
-3. Escanea el QR de la factura de Coto.
+3. Escanea el [QR de la factura de Coto](https://github.com/NickCis/cotodigital?tab=readme-ov-file#de-que-qr-me-hablas)
 4. Usa el botón de abajo a la derecha para activar el escaner de códigos de barra.
 5. Escanea todos los productos
 6. Revisa si faltó alguno!
@@ -31,7 +31,7 @@ El segundo QR que es más grande es información de la AFIP, no es usado aquí.
 
 ### No funciona el escaner de QR, ¿Que puedo hacer?
 
-Si tenes problemas escaneando el QR, utiliza cualquier escaner de QR (la cámara en iOS o Android), copia y pegá el link en la entrada que esta arriba de todo.
+Si tenes problemas escaneando el QR, utiliza cualquier escaner de QR (la cámara en iOS o Android), copia y pegá el link en la entrada de texto que esta arriba de todo.
 
 ## TODO
 
