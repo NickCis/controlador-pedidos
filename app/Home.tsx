@@ -1,13 +1,19 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Button, { ButtonProps } from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Tooltip from '@mui/material/Tooltip';
+import Link from '@mui/material/Link';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import BugReportIcon from '@mui/icons-material/BugReport';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import QrCode2Icon from '@mui/icons-material/QrCode2';
 
 import Frame from '@/components/Frame';
 import TextFieldScan from '@/components/TextFieldScan';
@@ -24,6 +30,57 @@ import ProductBottomSheet, {
   ProductBottomSheetProps,
 } from '@/components/ProductBottomSheet';
 import ClearButton from '@/components/ClearButton';
+import useOnboarding from '@/hooks/useOnboarding';
+
+function Empty({ onClick }: { onClick?: ButtonProps['onClick'] }) {
+  useOnboarding('home-empty');
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+      }}
+    >
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <ReceiptIcon sx={{ fontSize: '4em', marginBottom: 2 }} />
+        <Typography variant="h6" gutterBottom>
+          ¡Controla tu pedido!
+        </Typography>
+        <Box width="100%" px={1}>
+          <Typography variant="body2" gutterBottom align="center">
+            Para empezar a controlar el pedido escanea el QR pequeño que esta al
+            final de la factura.
+          </Typography>
+        </Box>
+        <Button
+          variant="contained"
+          startIcon={<QrCode2Icon />}
+          sx={{ marginBottom: 1, marginTop: 2 }}
+          onClick={onClick}
+          id="empty-scan-button"
+        >
+          Escanear
+        </Button>
+        <Typography variant="caption">
+          ¿No lo encontrás?{' '}
+          <Link
+            href="https://github.com/NickCis/cotodigital#como-usar"
+            target="_blank"
+          >
+            Has click aquí
+          </Link>
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
 
 function ScanFab({
   cart,
@@ -56,7 +113,7 @@ function ScanFab({
         onFullfill={onFullfill}
       />
       <Box sx={{ position: 'fixed', bottom: 16, right: 16 }}>
-        <Fab color="primary" onClick={() => setOpen(true)}>
+        <Fab color="primary" onClick={() => setOpen(true)} id="scan-fab">
           <BarCodeScannerIcon />
         </Fab>
       </Box>
@@ -65,6 +122,7 @@ function ScanFab({
 }
 
 function Content({ cart, setCart }: { cart: Cart; setCart: CartSetter }) {
+  useOnboarding('home-content');
   return (
     <Box sx={{ flex: 1 }}>
       <PendingProductList
@@ -90,6 +148,7 @@ function Content({ cart, setCart }: { cart: Cart; setCart: CartSetter }) {
 }
 
 export default function Home() {
+  const textFieldScanRef = useRef();
   const [ticket, setTicket] = useSesionState('__ticket__', '');
   const { data, loading } = useFetchCart(ticket);
   const [cart, setCart, clearCart] = useCart(data);
@@ -110,6 +169,7 @@ export default function Home() {
               component="a"
               target="_blank"
               href="https://github.com/NickCis/cotodigital/issues/new?assignees=NickCis&labels=bug&projects=&template=reporte-de-error.md&title="
+              id="report-bug-button"
             >
               <BugReportIcon />
             </IconButton>
@@ -120,12 +180,14 @@ export default function Home() {
               component="a"
               target="_blank"
               href="https://github.com/NickCis/cotodigital#como-usar"
+              id="help-button"
             >
               <QuestionMarkIcon />
             </IconButton>
           </Tooltip>
           {hasData ? (
             <ClearButton
+              id="home-content-clear-button"
               onClick={() => {
                 setTicket('');
                 clearCart();
@@ -136,10 +198,12 @@ export default function Home() {
       }
     >
       <TextFieldScan
+        ref={textFieldScanRef}
         value={ticket}
         onChange={(t) => setTicket(t)}
         label="Ticket de compra"
         disabled={isLoading}
+        iconButtonId="text-field-scan-button"
       />
       {isLoading ? (
         <Box
@@ -154,7 +218,9 @@ export default function Home() {
         </Box>
       ) : hasData ? (
         <Content cart={cart} setCart={setCart} />
-      ) : null}
+      ) : (
+        <Empty onClick={() => textFieldScanRef.current?.open()} />
+      )}
     </Frame>
   );
 }

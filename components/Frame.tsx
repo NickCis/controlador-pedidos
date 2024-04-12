@@ -5,6 +5,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
 
+// fix-vim-highlight = }
+
 export interface FrameProps extends BoxProps {
   header?: ReactNode;
 }
@@ -13,7 +15,7 @@ function Frame({ sx, header, children, ...props }: FrameProps) {
   return (
     <Box display="flex">
       <AppBar position="absolute">
-        <Toolbar sx={{ pr: 1 }}>
+        <Toolbar sx={{ pl: 2, pr: 1 }} disableGutters>
           <ProductionQuantityLimitsIcon sx={{ mr: 1 }} />
           <Typography component="h1" variant="h6" color="inherit" noWrap>
             Coto Digital

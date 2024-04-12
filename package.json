@@ -21,6 +21,7 @@
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@mui/material-nextjs": "^5.15.11",
+    "@reactour/tour": "^3.6.1",
     "@vercel/analytics": "^1.2.2",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",

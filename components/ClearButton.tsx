@@ -40,6 +40,7 @@ function ClearButton({ onClick, ...props }: IconButtonProps) {
           onClick={() => {
             setOpen(true);
           }}
+          {...props}
         >
           <ClearIcon />
         </IconButton>

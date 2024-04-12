@@ -60,6 +60,7 @@ function FullfilledProductList({
 }: FullfilledProductListProps) {
   return (
     <ProductList
+      id="fullfilled-product-list"
       title="Productos controlados"
       products={products}
       emptyState={

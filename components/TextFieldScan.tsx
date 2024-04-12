@@ -1,4 +1,4 @@
-import { useState, useId } from 'react';
+import { forwardRef, useImperativeHandle, useState, useId } from 'react';
 import type { TextFieldProps } from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -15,17 +15,24 @@ export interface TextFieldScan {
   value: string;
   onChange: (code: string) => void;
   disabled?: boolean;
+  iconButtonId?: string;
 }
 
-function TextFieldScan({
-  label,
-  fullWidth,
-  value,
-  onChange,
-  disabled,
-}: TextFieldScan) {
+const TextFieldScan = forwardRef(function TextFieldScan(
+  { label, fullWidth, value, onChange, disabled, iconButtonId }: TextFieldScan,
+  ref,
+) {
   const [open, setOpen] = useState(false);
   const id = useId();
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      open: () => setOpen(true),
+      close: () => setOpen(false),
+    }),
+    [setOpen],
+  );
 
   return (
     <FormControl variant="outlined" fullWidth>
@@ -52,6 +59,7 @@ function TextFieldScan({
               disabled={disabled}
               onClick={() => setOpen(true)}
               edge="end"
+              id={iconButtonId}
             >
               <QrCodeScannerIcon />
             </IconButton>
@@ -61,6 +69,6 @@ function TextFieldScan({
       />
     </FormControl>
   );
-}
+});
 
 export default TextFieldScan;
