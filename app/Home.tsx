@@ -16,7 +16,9 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import QrCode2Icon from '@mui/icons-material/QrCode2';
 
 import Frame from '@/components/Frame';
-import TextFieldScan from '@/components/TextFieldScan';
+import TextFieldScan, {
+  type TextFieldHandle,
+} from '@/components/TextFieldScan';
 import PendingProductList from '@/components/PendingProductList';
 import FullfilledProductList from '@/components/FullfilledProductList';
 import useFetchCart from '@/hooks/useFetchCart';
@@ -31,6 +33,8 @@ import ProductBottomSheet, {
 } from '@/components/ProductBottomSheet';
 import ClearButton from '@/components/ClearButton';
 import useOnboarding from '@/hooks/useOnboarding';
+
+// fix-vim-highlight = }
 
 function Empty({ onClick }: { onClick?: ButtonProps['onClick'] }) {
   useOnboarding('home-empty');
@@ -148,7 +152,7 @@ function Content({ cart, setCart }: { cart: Cart; setCart: CartSetter }) {
 }
 
 export default function Home() {
-  const textFieldScanRef = useRef();
+  const textFieldScanRef = useRef<TextFieldHandle>(null);
   const [ticket, setTicket] = useSesionState('__ticket__', '');
   const { data, loading } = useFetchCart(ticket);
   const [cart, setCart, clearCart] = useCart(data);

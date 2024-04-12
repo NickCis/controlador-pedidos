@@ -9,7 +9,7 @@ import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 
 import ScannerDialog from './ScannerDialog';
 
-export interface TextFieldScan {
+export interface TextFieldScanProps {
   label?: TextFieldProps['label'];
   fullWidth?: TextFieldProps['fullWidth'];
   value: string;
@@ -18,57 +18,71 @@ export interface TextFieldScan {
   iconButtonId?: string;
 }
 
-const TextFieldScan = forwardRef(function TextFieldScan(
-  { label, fullWidth, value, onChange, disabled, iconButtonId }: TextFieldScan,
-  ref,
-) {
-  const [open, setOpen] = useState(false);
-  const id = useId();
+export interface TextFieldHandle {
+  open: () => void;
+  close: () => void;
+}
 
-  useImperativeHandle(
+const TextFieldScan = forwardRef<TextFieldHandle, TextFieldScanProps>(
+  function TextFieldScan(
+    {
+      label,
+      fullWidth,
+      value,
+      onChange,
+      disabled,
+      iconButtonId,
+    }: TextFieldScanProps,
     ref,
-    () => ({
-      open: () => setOpen(true),
-      close: () => setOpen(false),
-    }),
-    [setOpen],
-  );
+  ) {
+    const [open, setOpen] = useState(false);
+    const id = useId();
 
-  return (
-    <FormControl variant="outlined" fullWidth>
-      <ScannerDialog
-        title="Escanear QR"
-        open={open}
-        onClose={() => setOpen(false)}
-        onScanSuccess={(code: string) => {
-          onChange(code);
-          setOpen(false);
-        }}
-      />
-      <InputLabel htmlFor={id}>{label}</InputLabel>
-      <OutlinedInput
-        disabled={disabled}
-        id={id}
-        value={value}
-        onChange={(e) => {
-          onChange(e.target.value);
-        }}
-        endAdornment={
-          <InputAdornment position="end">
-            <IconButton
-              disabled={disabled}
-              onClick={() => setOpen(true)}
-              edge="end"
-              id={iconButtonId}
-            >
-              <QrCodeScannerIcon />
-            </IconButton>
-          </InputAdornment>
-        }
-        label={label}
-      />
-    </FormControl>
-  );
-});
+    useImperativeHandle(
+      ref,
+      () => ({
+        open: () => setOpen(true),
+        close: () => setOpen(false),
+      }),
+      [setOpen],
+    );
+
+    return (
+      <FormControl variant="outlined" fullWidth>
+        <ScannerDialog
+          title="Escanear QR"
+          open={open}
+          onClose={() => setOpen(false)}
+          onScanSuccess={(code: string) => {
+            onChange(code);
+            setOpen(false);
+          }}
+        />
+        <InputLabel htmlFor={id}>{label}</InputLabel>
+        <OutlinedInput
+          disabled={disabled}
+          id={id}
+          value={value}
+          onChange={(e) => {
+            onChange(e.target.value);
+          }}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                disabled={disabled}
+                onClick={() => setOpen(true)}
+                edge="end"
+                id={iconButtonId}
+              >
+                <QrCodeScannerIcon />
+              </IconButton>
+            </InputAdornment>
+          }
+          label={label}
+        />
+      </FormControl>
+    );
+  },
+);
 
 export default TextFieldScan;

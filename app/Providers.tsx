@@ -17,7 +17,9 @@ export default function Providers({ children }: PropsWithChildren<{}>) {
     <AppRouterCacheProvider>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <TourProvider disableInteraction>{children}</TourProvider>
+        <TourProvider steps={[]} disableInteraction>
+          {children}
+        </TourProvider>
       </ThemeProvider>
     </AppRouterCacheProvider>
   );

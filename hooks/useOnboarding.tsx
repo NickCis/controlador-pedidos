@@ -4,9 +4,11 @@ import { useRef, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { useTour } from '@reactour/tour';
+import { useTour, type StepType } from '@reactour/tour';
 
 import ReceiptQRImg from '@/img/receipt-qr.jpg';
+//
+// fix-vim-highlight = }
 
 const Img = styled('img')({
   width: '100%',
@@ -20,7 +22,7 @@ type TourKeys = 'home-empty' | 'home-content';
 
 let cache: Record<string, boolean> | undefined = undefined;
 
-const Steps = {
+const Steps: Record<TourKeys, StepType[]> = {
   'home-empty': [
     {
       selector: 'header',
@@ -149,7 +151,7 @@ function readLocalStorage(): Record<string, boolean> {
     }
   }
 
-  return cache;
+  return cache || {};
 }
 
 function useOnboarding(key: TourKeys) {
@@ -159,10 +161,10 @@ function useOnboarding(key: TourKeys) {
   useEffect(() => {
     if (!ref.current) return;
     const state = readLocalStorage();
-    if (state[key]) return;
     const steps = Steps[key];
-    if (!steps) return;
+    if (state[key] || !steps || !ref.current) return;
     const { setSteps, setCurrentStep, setIsOpen } = ref.current;
+    if (!setSteps || !setCurrentStep || !setIsOpen) return;
     setSteps(steps);
     setCurrentStep(0);
     setIsOpen(true);
