@@ -6,6 +6,10 @@ Esta web te ayudará a controlar si te entregaron todos los productos del pedido
 
 ## Como usar
 
+
+https://github.com/NickCis/cotodigital/assets/174561/9d5b55e2-67fe-4905-94d6-dba32fba858c
+
+
 1. Entra en [https://cotodigital.vercel.app/](https://cotodigital.vercel.app/)
 2. Toca el botón "ESCANEAR" que esta en la mitad de la pantalla
 3. Escanea el QR de la factura de Coto.
@@ -34,7 +38,7 @@ Si tenes problemas escaneando el QR, utiliza cualquier escaner de QR (la cámara
 - [x] Agregar producto mediante scannear no debería dejar agregar productos más que el existente
 - [ ] Chequear que no se re marque un producto que ya fue marcado
 - [x] Header: agregar link a github con explicación de como usar
-- [ ] Github: agregar explicación de como usar
+- [x] Github: agregar explicación de como usar
 - [x] Header: clear (con confirm)
 - [x] Home empty state
 - [x] Home loading state
