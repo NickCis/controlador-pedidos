@@ -73,12 +73,11 @@ function Empty({ onClick }: { onClick?: ButtonProps['onClick'] }) {
           Escanear
         </Button>
         <Typography variant="caption">
-          ¿No lo encontrás?{' '}
           <Link
             href="https://github.com/NickCis/cotodigital#como-usar"
             target="_blank"
           >
-            Has click aquí
+            ¿No lo encontrás?
           </Link>
         </Typography>
       </Box>
