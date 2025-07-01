@@ -1,33 +1,92 @@
-import json
 import scrapy
+
 
 class Cotodigital(scrapy.Spider):
     name = "cotodigital"
     start_urls = [
-        'https://www.cotodigital3.com.ar/sitios/cdigi/browse',
+        'https://www.cotodigital.com.ar/sitios/cdigi/categoria?format=json',
     ]
 
     def parse(self, response):
-        has_next = False
-        has_ld = False
+        data = response.json()
+        next_page = ''
+        for content in data['contents']:
+            type_ = content.get('@type')
+            if type_ != 'Category_LandingPage':
+                continue
+            main = content.get('Main', [])
+            for m in main:
+                mtype = m.get('@type')
+                if mtype != 'Main_Slot':
+                    continue
+                contents = m.get('contents', [])
+                for c in contents:
+                    ctype = c.get('@type')
+                    if ctype != 'Category_ResultsList':
+                        continue
+                    # XXX: para ver como construye las url buscar siguiente código:
+                    # for (let t = 0; t < this.cantidadPaginas; t++) {
+                    navigation_state = c.get('pagingActionTemplate', {}).get(
+                        'navigationState', '')
+                    recs_per_page = int(c.get('recsPerPage', 1))
+                    split = navigation_state.split('%7Boffset%7D')
+                    first_rec_num = int(c.get('firstRecNum', 24))
+                    next_i = 1 + first_rec_num // recs_per_page
+                    pages_amount = int(
+                        c.get('totalNumRecs', 0)) / recs_per_page
+                    if next_i < pages_amount:
+                        next_page = f'{split[0]}{next_i * recs_per_page}{split[1].replace("%7BrecordsPerPage%7D", str(recs_per_page))}'
 
-        for a in response.css('div.product_info_container > a'):
-            yield response.follow(a.attrib['href'], self.parse_product)
+                    records = c.get('records', [])
+                    for record in records:
+                        record_records = record.get('records', [])
+                        for rr in record_records:
+                            product = {}
+                            url = rr.get('detailsAction', {}).get(
+                                'recordState')
+                            if url:
+                                product['url'] = 'https://www.cotodigital.com.ar/sitios/cdigi/productos' + url
 
-        next_link = response.css('a[title="Siguiente"]::attr(href)').get()
-        if next_link:
-            yield response.follow(next_link, self.parse)
+                            attributes = rr.get('attributes', {})
+                            for key in ['product.displayName', 'sku.displayName', 'product.description', 'sku.description']:
+                                name = attributes.get(key, [''])[0]
+                                if name:
+                                    product['name'] = name
+                                    break
 
-    def parse_product(self, response):
-        codes = response.css('.span_codigoplu::text').getall()
-        yield {
-            'url': response.request.url,
-            'name': response.css('h1.product_page::text').get().strip(),
-            'code': {
-                'plu': codes[0].strip(),
-                'ean': codes[1].strip(),
-            },
-            'img': response.css('img.zoomImage1::attr(src)').get(),
-            'price': response.css('.atg_store_newPrice::text').get().strip(),
-            'by_kg': response.css('section.unit_products::text').get().lower() == 'en kg:',
-        }
+                            image = attributes.get(
+                                'product.largeImage.url', [''])[0]
+                            if image:
+                                product['image'] = image
+
+                            ean = attributes.get(
+                                'product.eanPrincipal', [''])[0]
+                            plu = attributes.get(
+                                'product.repositoryId', [''])[0]
+                            if not plu:
+                                plu = attributes.get(
+                                    'sku.repositoryId', [''])[0]
+
+                            if ean or plu:
+                                product['code'] = {}
+                                if ean:
+                                    product['code']['ean'] = ean
+
+                                if plu:
+                                    product['code']['plu'] = str(
+                                        int(plu.replace('prod', '').replace('sku', '')))
+
+                            price = attributes.get('sku.activePrice', [''])[0]
+                            if price:
+                                product['price'] = price
+
+                            by_kg = attributes.get(
+                                'product.unidades.esPesable', ['0'])[0]
+                            if int(by_kg):
+                                product['by_kg'] = True
+
+                            if len(product.keys()):
+                                yield product
+
+        if next_page:
+            yield response.follow(next_page, self.parse)

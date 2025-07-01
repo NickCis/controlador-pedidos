@@ -4,7 +4,7 @@
 python -m venv venv
 source ./venv/bin/activate
 pip install -r requirements.txt
-scrapy crawl cotodigital -o cotodigital.ljson --output-format jsonlines
+scrapy crawl cotodigital -o cotodigital.ljson:jsonlines
 python ./merge.py --merge ./cotodigital.ljson ../json/plu.json
 ```
 
