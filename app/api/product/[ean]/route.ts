@@ -4,31 +4,11 @@ import fetch from 'node-fetch';
 import { parse } from 'node-html-parser';
 import type { Product } from 'types/Product';
 
-// fix-vim-highlight = {}
-
-const Base = 'http://apps01.coto.com.ar/TicketMobile/Ticket';
-
-interface Data {
-  products: Product[];
-  subsidiary?: {
-    name: string;
-    address: string;
-    date: string;
-    time: string;
-  };
-  total?: {
-    perceptions: {
-      name: string;
-      value: number;
-    }[];
-    total?: number;
-  };
-}
-
-async function getCotoDigitalLink(ean: string): Promise<string | undefined> {
-  const url = `https://www.google.com/search?q=${encodeURIComponent(
-    `site:cotodigital3.com.ar "${ean}"`,
-  )}`;
+// https://www.cotodigital.com.ar/sitios/cdigi/categoria?Nr=product.eanPrincipal:<ean>
+async function getCotoDigitalProduct(ean: string): Promise<any | undefined> {
+  const url = `https://www.cotodigital.com.ar/sitios/cdigi/categoria?Nr=product.eanPrincipal:${encodeURIComponent(
+    ean,
+  )}&format=json`;
   const response = await fetch(url, {
     headers: {
       'User-Agent':
@@ -36,12 +16,56 @@ async function getCotoDigitalLink(ean: string): Promise<string | undefined> {
       'Accept-Language': 'es-AR,es',
     },
   });
-  const text = await response.text();
-  const root = parse(text);
-  const links = root.querySelectorAll(
-    'div[lang="es"][jscontroller] a[href^="https://www.cotodigital3.com.ar"]',
-  );
-  return links[0]?.attributes?.href;
+  const json = (await response.json()) as any;
+
+  for (const content of json.contents) {
+    if (content['@type'] !== 'Category_LandingPage') continue;
+    const main = content.Main || [];
+    for (const m of main) {
+      if (m['@type'] !== 'Main_Slot') continue;
+      const contents = m.contents || [];
+      for (const c of contents) {
+        if (c['@type'] !== 'Category_ResultsList') continue;
+        const records = c.records || [];
+        for (const record of records) {
+          const recordRecords = record.records || [];
+          for (const rr of recordRecords) {
+            const product: any = { code: { ean } };
+            const url = rr.detailsAction?.recordState;
+            if (url)
+              product.url =
+                'https://www.cotodigital.com.ar/sitios/cdigi/productos' + url;
+            const attributes = rr.attributes || {};
+            for (const key of [
+              'product.displayName',
+              'sku.displayName',
+              'product.description',
+              'sku.description',
+            ]) {
+              const name = attributes[key]?.[0];
+              if (name) {
+                product['name'] = name;
+                break;
+              }
+            }
+
+            const image = attributes['product.largeImage.url']?.[0];
+            if (image) product.image = image;
+            let plu = attributes['product.repositoryId']?.[0];
+            if (!plu) plu = attributes['sku.repositoryId']?.[0];
+            if (plu) product.code.plu = plu;
+            const price = attributes['sku.activePrice']?.[0];
+            if (price) product.price = price;
+
+            const by_kg = attributes['product.unidades.esPesable']?.[0];
+            if (parseInt(by_kg, 10)) product.by_kg = true;
+
+            return product;
+          }
+        }
+      }
+    }
+  }
 }
 
 function safeTrim(str: string | undefined): string {
@@ -67,35 +91,18 @@ export async function GET(
   const { ean } = params;
   if (!ean || Array.isArray(ean)) return Response.json({}, { status: 404 });
 
-  const url = await getCotoDigitalLink(ean);
+  const product = await getCotoDigitalProduct(ean);
 
-  if (!url) return Response.json({}, { status: 404 });
+  if (!product) return Response.json({}, { status: 404 });
+  if (product.image) {
+    product.image_cdn = product.image;
+    product.image = fixImageUrl(product.image);
+  }
 
-  const response = await fetch(url);
-  const text = await response.text();
-  const root = parse(text);
-  const codes = root.querySelectorAll('.span_codigoplu');
-
-  return Response.json(
-    {
-      url,
-      name: safeTrim(root.querySelector('h1.product_page')?.innerText),
-      code: {
-        plu: safeTrim(codes?.[0]?.innerText),
-        ean: safeTrim(codes?.[1]?.innerText),
-      },
-      img: fixImageUrl(root.querySelector('img.zoomImage1')?.attributes?.src),
-      price: safeTrim(root.querySelector('.atg_store_newPrice')?.innerText),
-      by_kg:
-        safeTrim(
-          root.querySelector('section.unit_products')?.innerText,
-        ).toLowerCase() == 'en kg:',
+  return Response.json(product, {
+    status: 200,
+    headers: {
+      'Cache-Control': 'public, immutable, max-age=86400',
     },
-    {
-      status: 200,
-      headers: {
-        'Cache-Control': 'public, immutable, max-age=86400',
-      },
-    },
-  );
+  });
 }
