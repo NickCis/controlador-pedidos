@@ -1,4 +1,6 @@
-# Coto digital crawler
+# Crawler
+
+Crawler de productos.
 
 ```
 python -m venv venv
@@ -8,7 +10,12 @@ scrapy crawl cotodigital -o cotodigital.ljson:jsonlines
 python ./merge.py --merge ./cotodigital.ljson ../json/plu.json
 ```
 
-## Avoid getting banned
+## Aviso de responsabilidad y uso legítimo (Fair Use)
 
-- [Avoid getting banned](https://docs.scrapy.org/en/latest/topics/practices.html#avoiding-getting-banned)
-- [Scraper api](https://www.scraperapi.com/)
+Este proyecto ha sido desarrollado únicamente con fines didácticos, experimentales y de investigación sobre técnicas de análisis y automatización de datos públicos.
+
+No tiene ninguna relación, patrocinio, respaldo ni afiliación con COTO CICSA, sus marcas registradas o sus plataformas digitales (incluyendo “COTO Digital”).
+
+El código fuente se ofrece con propósitos educativos, bajo el amparo del principio de uso legítimo (fair use), aplicable al análisis, ingeniería inversa y estudio de interfaces públicas con fines de aprendizaje y compatibilidad técnica.
+
+Este software no reproduce ni distribuye material propietario, ni busca suplantar servicios oficiales.

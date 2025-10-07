@@ -18,7 +18,7 @@ function Frame({ sx, header, children, ...props }: FrameProps) {
         <Toolbar sx={{ pl: 2, pr: 1 }} disableGutters>
           <ProductionQuantityLimitsIcon sx={{ mr: 1 }} />
           <Typography component="h1" variant="h6" color="inherit" noWrap>
-            Coto Digital
+            Controlador de Pedidos
           </Typography>
           {header ? (
             <>

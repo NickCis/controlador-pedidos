@@ -5,8 +5,8 @@ import { Analytics } from '@vercel/analytics/react';
 import Providers from './Providers';
 
 export const metadata: Metadata = {
-  title: 'CotoDigital',
-  description: 'Controlador de pedidos de cotodigial',
+  title: 'Controlador Pedidos',
+  description: 'Controlador de pedidos de supermercados digitales',
 };
 
 export const viewport: Viewport = {

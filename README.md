@@ -1,18 +1,27 @@
-# Controlador de pedidos de Coto Digital
+# Control de entregas de pedidos
 
-(No afiliado de ninguna forma con Coto)
+> **Nota importante**: Este proyecto *no está afiliado, patrocinado ni respaldado* por **COTO CICSA** ni sus subsidiarias o marcas asociadas.
+> “COTO” y “COTO Digital” son marcas registradas de sus respectivos titulares.
 
-Esta web te ayudará a controlar si te entregaron todos los productos del pedido de coto digital. Vas a usar la cámara del celular para escanear la factura y después marcarás todos los productos escaneando los códigos de barras!.
+---
+
+## Descripción
+
+Esta herramienta permite al usuario verificar si los productos de un pedido fueron efectivamente entregados, comparando lo facturado con lo recibido, usando funciones como escaneo de QR y códigos de barras.
+
+Este software opera de forma independiente y no actúa en nombre de las empresas que administran la plataformas de pedidos.
+
+Plataformas implementadas (**no hay ninguna afiliación con ellas**):
+
+- [COTO DIGITAL](https://www.cotodigital.com.ar/)
 
 ## Como usar
 
+https://github.com/NickCis/controlador-pedidos/assets/174561/9d5b55e2-67fe-4905-94d6-dba32fba858c
 
-https://github.com/NickCis/cotodigital/assets/174561/9d5b55e2-67fe-4905-94d6-dba32fba858c
-
-
-1. Entra en [https://cotodigital.vercel.app/](https://cotodigital.vercel.app/)
+1. Entra en [https://controlador-pedidos.vercel.app/](https://controlador-pedidos.vercel.app/)
 2. Toca el botón "ESCANEAR" que esta en la mitad de la pantalla
-3. Escanea el [QR de la factura de Coto](https://github.com/NickCis/cotodigital?tab=readme-ov-file#de-que-qr-me-hablas)
+3. Escanea el [QR de la factura](https://github.com/NickCis/controlador-pedidos?tab=readme-ov-file#de-que-qr-me-hablas)
 4. Usa el botón de abajo a la derecha para activar el escaner de códigos de barra.
 5. Escanea todos los productos
 6. Revisa si faltó alguno!
@@ -21,13 +30,9 @@ https://github.com/NickCis/cotodigital/assets/174561/9d5b55e2-67fe-4905-94d6-dba
 
 ### ¿De que QR me hablas?
 
-Las facturas de COTO (tanto las que te dan en la caja o las envíadas con el pedido de Coto Digital), tienen dos QR al final de la factura:
+Las facturas emitidas por la plataforma de pedidos tienen dos códigos QR al final. El primero (más pequeño) contiene los datos del pedido y es el que debe escanearse. El segundo es información fiscal (AFIP) y no es utilizado por esta aplicación.
 
 ![QR al final de la factura](./img/receipt-qr.jpg)
-
-El QR que tiene la información del pedido es el primero, el pequeño. Este es el QR que se debe escanear.
-
-El segundo QR que es más grande es información de la AFIP, no es usado aquí.
 
 ### No funciona el escaner de QR, ¿Que puedo hacer?
 
@@ -53,3 +58,11 @@ Si tenes problemas escaneando el QR, utiliza cualquier escaner de QR (la cámara
 - [x] Cache en localstorage de última sesión (ticket, `useFetchCart`, `useCart`):
 - [ ] Service Worker (cache de imagenes e instalar)
 - [x] Onboarding
+
+---
+
+## Aclaraciones legales
+
+- Esta herramienta funciona exclusivamente con datos públicos proporcionados por las plataformas de pedidos, sin acceso privado o interno.
+- No tiene acceso privilegiado ni integra funciones oficiales específicas de la empresas propietarias de las marcas.
+

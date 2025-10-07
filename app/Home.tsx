@@ -74,7 +74,7 @@ function Empty({ onClick }: { onClick?: ButtonProps['onClick'] }) {
         </Button>
         <Typography variant="caption">
           <Link
-            href="https://github.com/NickCis/cotodigital#como-usar"
+            href="https://github.com/NickCis/controlador-pedidos#como-usar"
             target="_blank"
           >
             ¿No lo encontrás?
@@ -171,7 +171,7 @@ export default function Home() {
               color="inherit"
               component="a"
               target="_blank"
-              href="https://github.com/NickCis/cotodigital/issues/new?assignees=NickCis&labels=bug&projects=&template=reporte-de-error.md&title="
+              href="https://github.com/NickCis/controlador-pedidos/issues/new?assignees=NickCis&labels=bug&projects=&template=reporte-de-error.md&title="
               id="report-bug-button"
             >
               <BugReportIcon />
@@ -182,7 +182,7 @@ export default function Home() {
               color="inherit"
               component="a"
               target="_blank"
-              href="https://github.com/NickCis/cotodigital#como-usar"
+              href="https://github.com/NickCis/controlador-pedidos#como-usar"
               id="help-button"
             >
               <QuestionMarkIcon />
