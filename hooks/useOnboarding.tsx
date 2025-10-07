@@ -17,7 +17,7 @@ const Img = styled('img')({
   objectFit: 'contain',
 });
 
-const Key = 'CotoDigitalOnboarding';
+const Key = 'SuperDigitalOnboarding';
 type TourKeys = 'home-empty' | 'home-content';
 
 let cache: Record<string, boolean> | undefined = undefined;
@@ -31,7 +31,7 @@ const Steps: Record<TourKeys, StepType[]> = {
         <>
           <Typography gutterBottom>
             Esta aplicación te permitirá controlar que están todos los productos
-            facturados por CotoDigital
+            facturados por supermercados.
           </Typography>
           <Typography gutterBottom>
             Para eso vas a usar la cámara para escanear el QR pequeño que esta
